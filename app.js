@@ -15,4 +15,16 @@ io.on('connection', (socket)=> {
     socket.on('disconnect', ()=>{
         console.log('usuario desconectou')
     })
+
+    socket.on('msgParaServer', (data) => {
+        //envia msg
+        socket.emit('msgParaCliente', { apelido: data.apelido, mensagem: data.mensagem })
+        socket.broadcast.emit('msgParaCliente', { apelido: data.apelido, mensagem: data.mensagem })
+
+        //atualiza participantes
+        if(parseInt(data.apelidos_atualizados) == 0){
+            socket.emit('participantesParaCliente', { apelido: data.apelido })
+            socket.broadcast.emit('participantesParaCliente', { apelido: data.apelido })
+        }
+    });
 })
